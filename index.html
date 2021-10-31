@@ -1,0 +1,58 @@
+<div class="container my-4">
+    <ul>
+
+        <div class="progress" style="border: 1px solid red;">
+            <div class="progress-bar" id="progressbar" role="progressbar" aria-valuenow="70" aria-valuemin="0"
+                aria-valuemax="100" style="background-color: blue; text-align:center;">
+                <span class="sr-only" id="text"></span>
+            </div>
+        </div><br>
+
+    </ul>
+</div>
+<script src="/static/push.min.js"></script>
+<script src="/static/serviceWorker.min.js"></script>
+<script>
+    count = 0;
+    id = window.location.pathname
+    id = id.substring(1, id.length)
+    console.log("this " + id)
+    let socket = new WebSocket(`ws://localhost:8000/ws/post/1`)
+    socket.onopen = function (e) {
+        console.log("connection established")
+    }
+
+    socket.onmessage = function (e) {
+
+        data = JSON.parse(e.data)
+        console.log(data.payload.percentage)
+        change_progress(data.payload.percentage)
+        if (count != 0) {
+            push_notification("New Update", `Percentage Updated to ${data.payload.percentage}`)
+        }
+        count = 1;
+
+    }
+    socket.onclose = function (e) {
+        console.log("connection closed")
+    }
+
+    function change_progress(percentage) {
+        document.getElementById('text').innerText = percentage;
+        document.getElementById('progressbar').style.width = `${percentage}%`
+
+    }
+
+    function push_notification(title, message) {
+        Push.create(title, {
+            body: message,
+            icon: 'https://freebiehive.com/wp-content/uploads/2021/08/Facebook-Icon-PNG-1.jpg',
+            link: window.location.host,
+            timeout: 10000,
+            onClick: function () {
+                window.focus();
+                this.close();
+            }
+        });
+    }
+</script>

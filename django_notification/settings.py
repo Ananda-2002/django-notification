@@ -89,11 +89,11 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('localhost', '6379'), os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [('redis://:RfNl50maJjjZhbxXaQq7qv2fmwkghtV1@redis-19882.c264.ap-south-1-1.ec2.cloud.redislabs.com:19882/0')]
         },
     },
 }
-# , ('redis-19882.c264.ap-south-1-1.ec2.cloud.redislabs.com', '19882')
+# ('localhost', '6379')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
